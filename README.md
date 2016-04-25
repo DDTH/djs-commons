@@ -18,7 +18,7 @@ Third party libraries are distributed under their own license(s).
 
 ## Installation ##
 
-Latest release version: `0.1.0`. See [RELEASE-NOTES.md](RELEASE-NOTES.md).
+Latest release version: `0.1.1`. See [RELEASE-NOTES.md](RELEASE-NOTES.md).
 
 Maven dependency: 
 
