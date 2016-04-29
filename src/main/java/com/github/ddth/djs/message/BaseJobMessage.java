@@ -1,5 +1,7 @@
 package com.github.ddth.djs.message;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.github.ddth.djs.bo.job.JobInfoBo;
 
 /**
@@ -15,5 +17,17 @@ public abstract class BaseJobMessage extends BaseMessage {
 
 	public BaseJobMessage(JobInfoBo jobInfo) {
 		this.jobInfo = jobInfo;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @since 0.1.2
+	 */
+	@Override
+	public String toString() {
+		ToStringBuilder tsb = new ToStringBuilder(this);
+		tsb.appendSuper(super.toString()).append("jobInfo", jobInfo);
+		return tsb.toString();
 	}
 }
