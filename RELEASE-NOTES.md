@@ -1,6 +1,14 @@
 djs-commons release notes
 =========================
 
+0.1.3 - 2016-05-03
+------------------
+
+- New packages `com.github.ddth.djs.message.queue` and `com.github.ddth.djs.message.bus`.
+- New BO: `JobExecInfoBo`
+- Other enhancements.
+
+
 0.1.2 - 2016-04-29
 ------------------
 
