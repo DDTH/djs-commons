@@ -18,7 +18,7 @@ CREATE TABLE djs_tasklog_base (
         INDEX (timestamp_pickup),
     duration_pickup         INT,
     node_pickup             VARCHAR(255),
-    timestamp_finish        DATETIME
+    timestamp_finish        DATETIME,
         INDEX (timestamp_finish),
     duration_finish         INT
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;

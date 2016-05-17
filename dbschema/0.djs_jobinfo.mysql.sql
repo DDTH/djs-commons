@@ -15,7 +15,7 @@ CREATE TABLE djs_jobinfo (
 DROP TABLE IF EXISTS djs_jobexecinfo;
 CREATE TABLE djs_jobexecinfo (
     job_id                          VARCHAR(32),
-        PRIMARY (job_id),
+        PRIMARY KEY (job_id),
     job_last_execute_task_id        VARCHAR(32),
     job_last_fireoff_task_id        VARCHAR(32)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
