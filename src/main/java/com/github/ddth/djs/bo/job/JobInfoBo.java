@@ -271,6 +271,29 @@ public class JobInfoBo extends BaseBo {
         return setMetadataField(METADATA_FIELD_CRON, cronFormat);
     }
 
+    public final static String METADATA_FIELD_PARAMS = "params";
+
+    /**
+     * Gets job's parameters.
+     * 
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    @JsonIgnore
+    public Map<String, Object> getParams() {
+        return getMetadataField(METADATA_FIELD_PARAMS, Map.class);
+    }
+
+    /**
+     * Sets job's parameters.
+     * 
+     * @param jobParams
+     * @return
+     */
+    public JobInfoBo setParams(Map<String, Object> jobParams) {
+        return setMetadataField(METADATA_FIELD_PARAMS, jobParams);
+    }
+
     /*----------------------------------------------------------------------*/
     @Override
     protected void triggerPopulate() {

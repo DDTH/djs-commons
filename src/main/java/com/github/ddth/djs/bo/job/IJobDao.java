@@ -47,6 +47,8 @@ public interface IJobDao {
      */
     public String[] getAllJobInfoIds();
 
+    /*----------------------------------------------------------------------*/
+
     /**
      * Fetches an existing job execution info from storage.
      * 
@@ -64,4 +66,48 @@ public interface IJobDao {
      * @since 0.1.3
      */
     public boolean createOrUpdate(JobExecInfoBo jobExecInfo);
+
+    /*----------------------------------------------------------------------*/
+    /**
+     * Persists a new job template to storage.
+     * 
+     * @param jobTemplate
+     * @return
+     * @since 0.1.3.3
+     */
+    public boolean create(JobTemplateBo jobTemplate);
+
+    /**
+     * Deletes an existing job template from storage.
+     * 
+     * @param jobTemplate
+     * @return
+     * @since 0.1.3.3
+     */
+    public boolean delete(JobTemplateBo jobTemplate);
+
+    /**
+     * Updates an exiting job template.
+     * 
+     * @param jobTemplate
+     * @return
+     * @since 0.1.3.3
+     */
+    public boolean update(JobTemplateBo jobTemplate);
+
+    /**
+     * Fetches an existing job template from storage.
+     * 
+     * @param id
+     * @return
+     */
+    public JobTemplateBo getJobTemplate(String id);
+
+    /**
+     * Fetches all job template IDs from storage.
+     * 
+     * @return
+     * @since 0.1.3.3
+     */
+    public String[] getAllJobTemplateIds();
 }
