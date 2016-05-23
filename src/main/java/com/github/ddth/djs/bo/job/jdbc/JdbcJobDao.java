@@ -2,11 +2,15 @@ package com.github.ddth.djs.bo.job.jdbc;
 
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.ddth.commons.utils.DPathUtils;
 import com.github.ddth.dao.jdbc.BaseJdbcDao;
 import com.github.ddth.djs.bo.job.IJobDao;
 import com.github.ddth.djs.bo.job.JobExecInfoBo;
@@ -42,6 +46,10 @@ public class JdbcJobDao extends BaseJdbcDao implements IJobDao {
     }
 
     /*----------------------------------------------------------------------*/
+    private static String cacheKeyAllJobInfo() {
+        return "_ALL_JOBINFO_";
+    }
+
     private static String cacheKeyJobInfo(String id) {
         return id;
     }
@@ -56,6 +64,7 @@ public class JdbcJobDao extends BaseJdbcDao implements IJobDao {
         } else {
             removeFromCache(cacheNameJobInfo, cacheKey(jobInfo));
         }
+        removeFromCache(cacheNameJobInfo, cacheKeyAllJobInfo());
     }
     /*----------------------------------------------------------------------*/
 
@@ -69,6 +78,7 @@ public class JdbcJobDao extends BaseJdbcDao implements IJobDao {
         SQL_CREATE_JOBINFO = MessageFormat.format(SQL_CREATE_JOBINFO, tableNameJobInfo);
         SQL_DELETE_JOBINFO = MessageFormat.format(SQL_DELETE_JOBINFO, tableNameJobInfo);
         SQL_GET_JOBINFO = MessageFormat.format(SQL_GET_JOBINFO, tableNameJobInfo);
+        SQL_GET_ALL_JOBINFO_IDS = MessageFormat.format(SQL_GET_ALL_JOBINFO_IDS, tableNameJobInfo);
         SQL_UPDATE_JOBINFO = MessageFormat.format(SQL_UPDATE_JOBINFO, tableNameJobInfo);
 
         SQL_CREATE_OR_UPDATE_JOBEXECINFO = MessageFormat.format(SQL_CREATE_OR_UPDATE_JOBEXECINFO,
@@ -88,6 +98,8 @@ public class JdbcJobDao extends BaseJdbcDao implements IJobDao {
             + StringUtils.join(COLS_JOBINFO_CREATE, ',') + ") VALUES ("
             + StringUtils.repeat("?", ",", COLS_JOBINFO_CREATE.length) + ")";
     private String SQL_DELETE_JOBINFO = "DELETE FROM {0} WHERE " + JobInfoBoMapper.COL_ID + "=?";
+    private String SQL_GET_ALL_JOBINFO_IDS = "SELECT " + JobInfoBoMapper.COL_ID
+            + " FROM {0} ORDER BY " + JobInfoBoMapper.COL_ID + " DESC";
     private String SQL_GET_JOBINFO = "SELECT " + StringUtils.join(COLS_JOBINFO_ALL, ',')
             + " FROM {0} WHERE " + JobInfoBoMapper.COL_ID + "=?";
     private String SQL_UPDATE_JOBINFO = "UPDATE {0} SET " + StringUtils.join(
@@ -169,6 +181,34 @@ public class JdbcJobDao extends BaseJdbcDao implements IJobDao {
             }
         }
         return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public String[] getAllJobInfoIds() {
+        final String cacheKey = cacheKeyAllJobInfo();
+        List<String> result = getFromCache(cacheNameJobInfo, cacheKey, List.class);
+        if (result == null) {
+            final Object[] WHERE_VALUES = ArrayUtils.EMPTY_OBJECT_ARRAY;
+            try {
+                List<Map<String, Object>> dbRows = executeSelect(SQL_GET_ALL_JOBINFO_IDS,
+                        WHERE_VALUES);
+                result = new ArrayList<>();
+                for (Map<String, Object> dbRow : dbRows) {
+                    String id = DPathUtils.getValue(dbRow, JobInfoBoMapper.COL_ID, String.class);
+                    if (!StringUtils.isBlank(id)) {
+                        result.add(id);
+                    }
+                }
+                putToCache(cacheNameJobInfo, cacheKey, result);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return result.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
     }
 
     /*----------------------------------------------------------------------*/

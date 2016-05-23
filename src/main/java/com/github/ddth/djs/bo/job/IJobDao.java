@@ -40,6 +40,14 @@ public interface IJobDao {
     public JobInfoBo getJobInfo(String id);
 
     /**
+     * Fetches all job info IDs from storage.
+     * 
+     * @return
+     * @since 0.1.3.2
+     */
+    public String[] getAllJobInfoIds();
+
+    /**
      * Fetches an existing job execution info from storage.
      * 
      * @param id
