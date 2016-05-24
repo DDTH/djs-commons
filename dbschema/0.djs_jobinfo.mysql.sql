@@ -3,7 +3,7 @@
 DROP TABLE IF EXISTS djs_jobtemplate;
 CREATE TABLE djs_jobtemplate (
     tpl_id                          VARCHAR(32),
-        PRIMARY KEY (temp_id),
+        PRIMARY KEY (tpl_id),
     tpl_desc                        VARCHAR(255),
     tpl_update_timestamp            DATETIME,
     tpl_params                      TEXT

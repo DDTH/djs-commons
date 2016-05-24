@@ -43,6 +43,7 @@ public class JobInfoBo extends BaseBo {
 
     private final static String ATTR_ID = "id";
     private final static String ATTR_DESC = "desc";
+    private final static String ATTR_TEMPLATE_ID = "template_id";
     private final static String ATTR_UPDATE_TIMESTAMP = "timestamp";
     private final static String ATTR_TAGS = "tags";
     private final static String ATTR_METADATA = "metadata";
@@ -63,6 +64,16 @@ public class JobInfoBo extends BaseBo {
 
     public JobInfoBo setDescription(String desc) {
         return (JobInfoBo) setAttribute(ATTR_DESC, desc != null ? desc.trim() : "");
+    }
+
+    @JsonIgnore
+    public String getTemplateId() {
+        return getAttribute(ATTR_TEMPLATE_ID, String.class);
+    }
+
+    public JobInfoBo setTemplateId(String templateId) {
+        return (JobInfoBo) setAttribute(ATTR_TEMPLATE_ID,
+                templateId != null ? templateId.trim() : null);
     }
 
     @JsonIgnore
