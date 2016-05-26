@@ -16,6 +16,7 @@ CREATE TABLE djs_jobinfo (
         PRIMARY KEY (job_id),
     job_desc                        VARCHAR(255),
     job_template_id                 VARCHAR(32),
+    job_is_running                  TINYINT(4)              NOT NULL DEFAULT 0,
     job_update_timestamp            DATETIME,
     job_tags                        TEXT,
     job_metadata                    TEXT

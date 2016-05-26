@@ -178,8 +178,9 @@ public class JdbcJobDao extends BaseJdbcDao implements IJobDao {
     /*----------------------------------------------------------------------*/
 
     private final static String[] COLS_JOBINFO_ALL = { JobInfoBoMapper.COL_ID,
-            JobInfoBoMapper.COL_DESC, JobInfoBoMapper.COL_TEMPLATE_ID, JobInfoBoMapper.COL_METADATA,
-            JobInfoBoMapper.COL_TAGS, JobInfoBoMapper.COL_UPDATE_TIMESTAMP };
+            JobInfoBoMapper.COL_DESC, JobInfoBoMapper.COL_TEMPLATE_ID,
+            JobInfoBoMapper.COL_IS_RUNNING, JobInfoBoMapper.COL_METADATA, JobInfoBoMapper.COL_TAGS,
+            JobInfoBoMapper.COL_UPDATE_TIMESTAMP };
     private final static String[] COLS_JOBINFO_CREATE = COLS_JOBINFO_ALL;
     private String SQL_CREATE_JOBINFO = "INSERT INTO {0} ("
             + StringUtils.join(COLS_JOBINFO_CREATE, ',') + ") VALUES ("
@@ -189,12 +190,11 @@ public class JdbcJobDao extends BaseJdbcDao implements IJobDao {
             + " FROM {0} ORDER BY " + JobInfoBoMapper.COL_ID + " DESC";
     private String SQL_GET_JOBINFO = "SELECT " + StringUtils.join(COLS_JOBINFO_ALL, ',')
             + " FROM {0} WHERE " + JobInfoBoMapper.COL_ID + "=?";
-    private String SQL_UPDATE_JOBINFO = "UPDATE {0} SET "
-            + StringUtils.join(new String[] { JobInfoBoMapper.COL_DESC + "=?",
-                    JobInfoBoMapper.COL_TEMPLATE_ID + "=?", JobInfoBoMapper.COL_METADATA + "=?",
+    private String SQL_UPDATE_JOBINFO = "UPDATE {0} SET " + StringUtils.join(
+            new String[] { JobInfoBoMapper.COL_DESC + "=?", JobInfoBoMapper.COL_TEMPLATE_ID + "=?",
+                    JobInfoBoMapper.COL_IS_RUNNING + "=?", JobInfoBoMapper.COL_METADATA + "=?",
                     JobInfoBoMapper.COL_TAGS + "=?", JobInfoBoMapper.COL_UPDATE_TIMESTAMP + "=?" },
-                    ',')
-            + " WHERE " + JobInfoBoMapper.COL_ID + "=?";
+            ',') + " WHERE " + JobInfoBoMapper.COL_ID + "=?";
 
     /**
      * {@inheritDoc}
@@ -206,7 +206,8 @@ public class JdbcJobDao extends BaseJdbcDao implements IJobDao {
         final Date TIMESTAMP = jobInfo.getUpdateTimestamp() != null ? jobInfo.getUpdateTimestamp()
                 : now;
         final Object[] VALUES = new Object[] { jobInfo.getId(), jobInfo.getDescription(),
-                jobInfo.getTemplateId(), jobInfo.getMetadata(), jobInfo.getTags(), TIMESTAMP };
+                jobInfo.getTemplateId(), jobInfo.isRunning() ? 1 : 0, jobInfo.getMetadata(),
+                jobInfo.getTags(), TIMESTAMP };
         try {
             int numRows = execute(SQL_CREATE_JOBINFO, VALUES);
             jobInfo.setUpdateTimestamp(TIMESTAMP);
@@ -240,8 +241,8 @@ public class JdbcJobDao extends BaseJdbcDao implements IJobDao {
         JobInfoBo jobInfo = JobInfoBo.newInstance(_jobInfo);
         jobInfo.setUpdateTimestamp(new Date());
         final Object[] PARAM_VALUES = new Object[] { jobInfo.getDescription(),
-                jobInfo.getTemplateId(), jobInfo.getMetadata(), jobInfo.getTags(),
-                jobInfo.getUpdateTimestamp(), jobInfo.getId() };
+                jobInfo.getTemplateId(), jobInfo.isRunning() ? 1 : 0, jobInfo.getMetadata(),
+                jobInfo.getTags(), jobInfo.getUpdateTimestamp(), jobInfo.getId() };
         try {
             int nunRows = execute(SQL_UPDATE_JOBINFO, PARAM_VALUES);
             invalidate(jobInfo, true);

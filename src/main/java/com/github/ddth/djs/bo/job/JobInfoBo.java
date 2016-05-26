@@ -43,7 +43,8 @@ public class JobInfoBo extends BaseBo {
 
     private final static String ATTR_ID = "id";
     private final static String ATTR_DESC = "desc";
-    private final static String ATTR_TEMPLATE_ID = "template_id";
+    private final static String ATTR_TEMPLATE_ID = "tmpl_id";
+    private final static String ATTR_IS_RUNNING = "running";
     private final static String ATTR_UPDATE_TIMESTAMP = "timestamp";
     private final static String ATTR_TAGS = "tags";
     private final static String ATTR_METADATA = "metadata";
@@ -74,6 +75,25 @@ public class JobInfoBo extends BaseBo {
     public JobInfoBo setTemplateId(String templateId) {
         return (JobInfoBo) setAttribute(ATTR_TEMPLATE_ID,
                 templateId != null ? templateId.trim() : null);
+    }
+
+    @JsonIgnore
+    public int getIsRunning() {
+        Integer value = getAttribute(ATTR_IS_RUNNING, Integer.class);
+        return value != null ? value.intValue() : 0;
+    }
+
+    @JsonIgnore
+    public boolean isRunning() {
+        return getIsRunning() != 0;
+    }
+
+    public JobInfoBo setIsRunning(int value) {
+        return (JobInfoBo) setAttribute(ATTR_IS_RUNNING, value != 0 ? 1 : 0);
+    }
+
+    public JobInfoBo setIsRunning(boolean value) {
+        return (JobInfoBo) setAttribute(ATTR_IS_RUNNING, value ? 1 : 0);
     }
 
     @JsonIgnore
