@@ -4,41 +4,37 @@ import com.github.ddth.djs.bo.job.JobInfoBo;
 import com.github.ddth.djs.message.BaseJobMessage;
 
 /**
- * This message is sent when new job is created/added.
+ * This message is sent when a job is started.
  * 
  * @author Thanh Nguyen <btnguyen2k@gmail.com>
- * @since 0.1.0
+ * @since 0.1.3.6
  */
-public class JobInfoAddedMessage extends BaseJobMessage {
+public class JobInfoStartedMessage extends BaseJobMessage {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructs a new {@link JobInfoAddedMessage} object (used for
+     * Constructs a new {@link JobInfoStartedMessage} object (used for
      * deserialization).
-     * 
-     * @since 0.1.3
      */
-    public JobInfoAddedMessage() {
+    public JobInfoStartedMessage() {
         super(null);
     }
 
     /**
-     * Constructs a new {@link JobInfoAddedMessage} object.
+     * Constructs a new {@link JobInfoStartedMessage} object.
      * 
      * @param jobInfo
      */
-    public JobInfoAddedMessage(JobInfoBo jobInfo) {
+    public JobInfoStartedMessage(JobInfoBo jobInfo) {
         super(jobInfo);
     }
 
     /**
      * {@inheritDoc}
-     * 
-     * @since 0.1.3
      */
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof JobInfoAddedMessage && super.equals(obj);
+        return obj instanceof JobInfoStartedMessage && super.equals(obj);
     }
 }

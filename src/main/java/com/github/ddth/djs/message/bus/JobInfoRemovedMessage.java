@@ -2,7 +2,6 @@ package com.github.ddth.djs.message.bus;
 
 import com.github.ddth.djs.bo.job.JobInfoBo;
 import com.github.ddth.djs.message.BaseJobMessage;
-import com.github.ddth.djs.message.BaseMessage;
 
 /**
  * This message is sent when new job is removed.
@@ -41,28 +40,5 @@ public class JobInfoRemovedMessage extends BaseJobMessage {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof JobInfoRemovedMessage && super.equals(obj);
-    }
-
-    /*----------------------------------------------------------------------*/
-    public static void main(String[] args) {
-        JobInfoBo jobInfo = JobInfoBo.newInstance();
-        jobInfo.setCron("* * * * *");
-
-        JobInfoRemovedMessage orgMsg = new JobInfoRemovedMessage(jobInfo);
-        System.out.println(orgMsg);
-        {
-            String dataJson = orgMsg.toJson();
-            System.out.println(dataJson.getBytes().length + "\t" + dataJson);
-            JobInfoRemovedMessage msg = deserialize(dataJson, JobInfoRemovedMessage.class);
-            System.out.println(msg);
-        }
-        {
-            byte[] bytes = orgMsg.toBytes();
-            System.out.println(bytes.length + "\t" + bytes);
-            JobInfoRemovedMessage msg1 = deserialize(bytes, JobInfoRemovedMessage.class);
-            System.out.println(msg1);
-            BaseMessage msg2 = BaseMessage.deserialize(bytes);
-            System.out.println(msg2);
-        }
     }
 }
