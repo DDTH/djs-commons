@@ -10,6 +10,7 @@ import com.github.ddth.djs.message.queue.TaskFireoffMessage;
  * @since 0.1.3.7
  */
 public interface IDjsApi {
+
     /**
      * Polls a job task from server.
      * 

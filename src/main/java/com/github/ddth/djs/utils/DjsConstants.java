@@ -26,4 +26,10 @@ public class DjsConstants {
     public final static int RESPONSE_CLIENT_ERROR = 400;
     public final static int RESPONSE_SERVER_ERROR = 500;
 
+    public final static String API_PARAM_CLIENT_ID = "client_id";
+    public final static String API_PARAM_TASK = "task";
+    public final static String API_RESPONSE_STATUS = "status";
+    public final static String API_RESPONSE_MESSAGE = "message";
+    public final static String API_RESPONSE_DATA = "data";
+
 }
