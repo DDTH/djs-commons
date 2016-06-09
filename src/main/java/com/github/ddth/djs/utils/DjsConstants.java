@@ -15,6 +15,7 @@ public class DjsConstants {
     public final static int TASK_STATUS_NEW = 0;
     public final static int TASK_STATUS_PICKED = 1;
     public final static int TASK_STATUS_SKIPPED = 2;
+    public final static int TASK_STATUS_RETURNED = 3;
     public final static int TASK_STATUS_FINISHED_OK = 10;
     public final static int TASK_STATUS_FINISHED_CANCEL = 11;
     public final static int TASK_STATUS_FINISHED_ERROR = 12;

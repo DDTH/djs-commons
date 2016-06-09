@@ -39,6 +39,18 @@ public abstract class BaseJobMessage extends BaseMessage {
     }
 
     /**
+     * Constructs a new {@link BaseJobMessage} instance.
+     * 
+     * @param id
+     * @param jobInfo
+     * @since 0.1.3.9
+     */
+    public BaseJobMessage(String id, JobInfoBo jobInfo) {
+        super(id);
+        this.jobInfo = jobInfo;
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * @since 0.1.2

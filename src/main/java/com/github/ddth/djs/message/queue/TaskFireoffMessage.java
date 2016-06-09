@@ -21,6 +21,10 @@ public class TaskFireoffMessage extends BaseJobMessage {
         super(jobInfo);
     }
 
+    public TaskFireoffMessage(String id, JobInfoBo jobInfo) {
+        super(id, jobInfo);
+    }
+
     /**
      * {@inheritDoc}
      * 

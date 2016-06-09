@@ -70,10 +70,29 @@ public abstract class BaseMessage implements Serializable {
     protected final static String ATTR_TIMESTAMP_MS = "timestampMillis";
 
     @JsonProperty
-    public final String id = DjsUtils.IDGEN.generateId128Hex();
+    public final String id;
 
     @JsonProperty
     public final long timestampMillis = System.currentTimeMillis();
+
+    /**
+     * Constructs a new {@link BaseMessage} instance.
+     * 
+     * @since 0.1.3.9
+     */
+    public BaseMessage() {
+        id = DjsUtils.IDGEN.generateId128Hex();
+    }
+
+    /**
+     * Constructs a new {@link BaseMessage} instance.
+     * 
+     * @param id
+     * @since 0.1.3.9
+     */
+    public BaseMessage(String id) {
+        this.id = id;
+    }
 
     /**
      * {@inheritDoc}

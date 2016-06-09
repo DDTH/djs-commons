@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.github.ddth.djs.bo.job.JobInfoBo;
 import com.github.ddth.djs.message.BaseJobMessage;
 
 /**
@@ -30,8 +29,8 @@ public class TaskPickupMessage extends BaseJobMessage {
         pickupNode = null;
     }
 
-    public TaskPickupMessage(JobInfoBo jobInfo, String pickupNode) {
-        super(jobInfo);
+    public TaskPickupMessage(TaskFireoffMessage taskFireoffMessage, String pickupNode) {
+        super(taskFireoffMessage.id, taskFireoffMessage.jobInfo);
         this.pickupNode = pickupNode;
     }
 

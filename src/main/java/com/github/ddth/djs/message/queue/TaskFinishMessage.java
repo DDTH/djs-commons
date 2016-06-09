@@ -9,7 +9,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.github.ddth.djs.bo.job.JobInfoBo;
 import com.github.ddth.djs.message.BaseJobMessage;
 import com.github.ddth.djs.utils.DjsConstants;
 
@@ -36,9 +35,9 @@ public class TaskFinishMessage extends BaseJobMessage {
         output = null;
     }
 
-    public TaskFinishMessage(JobInfoBo jobInfo, int status, String message, String error,
-            byte[] output) {
-        super(jobInfo);
+    public TaskFinishMessage(TaskFireoffMessage taskFireoffMessage, int status, String message,
+            String error, byte[] output) {
+        super(taskFireoffMessage.id, taskFireoffMessage.jobInfo);
         this.status = status;
         this.message = message;
         this.error = error;
