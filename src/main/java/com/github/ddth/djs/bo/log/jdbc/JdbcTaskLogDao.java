@@ -121,7 +121,7 @@ public class JdbcTaskLogDao extends BaseJdbcDao implements ITaskLogDao {
             TaskLogBoMapper.COL_TIMESTAMP_CREATE, TaskLogBoMapper.COL_NODE_CREATE,
             TaskLogBoMapper.COL_TIMESTAMP_PICKUP, TaskLogBoMapper.COL_DURATION_PICKUP,
             TaskLogBoMapper.COL_NODE_PICKUP, TaskLogBoMapper.COL_TIMESTAMP_FINISH,
-            TaskLogBoMapper.COL_TIMESTAMP_FINISH };
+            TaskLogBoMapper.COL_DURATION_FINISH };
     private final static String[] COLS_TASKLOG_CREATE = COLS_TASKLOG_ALL;
     private String SQL_CREATE_TASKLOG = "INSERT INTO {0} ("
             + StringUtils.join(COLS_TASKLOG_CREATE, ',') + ") VALUES ("
