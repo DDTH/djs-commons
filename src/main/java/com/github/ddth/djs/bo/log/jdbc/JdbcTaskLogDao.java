@@ -2,11 +2,15 @@ package com.github.ddth.djs.bo.log.jdbc;
 
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.ddth.commons.utils.DPathUtils;
 import com.github.ddth.commons.utils.DateFormatUtils;
 import com.github.ddth.dao.jdbc.BaseJdbcDao;
 import com.github.ddth.djs.bo.job.IJobDao;
@@ -23,6 +27,7 @@ import com.github.ddth.djs.utils.DjsUtils;
 public class JdbcTaskLogDao extends BaseJdbcDao implements ITaskLogDao {
 
     private String tableTemplateName = "djs_tasklog_{0}";
+    private String tableNameLatestLogs = "djs_tasklog_latest";
 
     private String cacheName = "DJS_TASKLOG";
 
@@ -48,6 +53,15 @@ public class JdbcTaskLogDao extends BaseJdbcDao implements ITaskLogDao {
         return calcTableName(DjsUtils.extractTimestamp(taskLogId));
     }
 
+    protected String getTableNameLatestLogs() {
+        return tableNameLatestLogs;
+    }
+
+    public JdbcTaskLogDao setTableNameLatestLogs(String tableNameLatestLogs) {
+        this.tableNameLatestLogs = tableNameLatestLogs;
+        return this;
+    }
+
     protected String getCacheName() {
         return cacheName;
     }
@@ -58,6 +72,10 @@ public class JdbcTaskLogDao extends BaseJdbcDao implements ITaskLogDao {
     }
 
     /*----------------------------------------------------------------------*/
+    private static String cacheKeyLatestLogs() {
+        return "LATEST_LOGS";
+    }
+
     private static String cacheKeyTaskLog(String id) {
         return id;
     }
@@ -82,10 +100,20 @@ public class JdbcTaskLogDao extends BaseJdbcDao implements ITaskLogDao {
     public JdbcTaskLogDao init() {
         super.init();
 
+        SQL_CREATE_TASKLOG_LATEST = MessageFormat.format(SQL_CREATE_TASKLOG_LATEST,
+                tableNameLatestLogs);
+        SQL_DELETE_TASKLOG_LATEST = MessageFormat.format(SQL_DELETE_TASKLOG_LATEST,
+                tableNameLatestLogs);
+        SQL_GET_TASKLOGS_LATEST = MessageFormat.format(SQL_GET_TASKLOGS_LATEST,
+                tableNameLatestLogs);
+        SQL_CLEANUP_TASKLOG_LATEST = MessageFormat.format(SQL_CLEANUP_TASKLOG_LATEST,
+                tableNameLatestLogs);
+
         return this;
     }
 
     /*----------------------------------------------------------------------*/
+    private final static int MAX_KEPT_LATEST_LOGS = 1000;
 
     private final static String[] COLS_TASKLOG_ALL = { TaskLogBoMapper.COL_ID,
             TaskLogBoMapper.COL_JOB_ID, TaskLogBoMapper.COL_STATUS, TaskLogBoMapper.COL_MESSAGE,
@@ -110,6 +138,14 @@ public class JdbcTaskLogDao extends BaseJdbcDao implements ITaskLogDao {
                     TaskLogBoMapper.COL_TIMESTAMP_FINISH + "=?",
                     TaskLogBoMapper.COL_DURATION_FINISH + "=?" }, ',')
             + " WHERE " + TaskLogBoMapper.COL_ID + "=?";
+    private String SQL_CREATE_TASKLOG_LATEST = "INSERT INTO {0} (" + TaskLogBoMapper.COL_ID
+            + ") VALUES (?)";
+    private String SQL_DELETE_TASKLOG_LATEST = "DELETE FROM {0} WHERE " + TaskLogBoMapper.COL_ID
+            + "=?";
+    private String SQL_CLEANUP_TASKLOG_LATEST = "DELETE FROM {0} WHERE " + TaskLogBoMapper.COL_ID
+            + "<?";
+    private String SQL_GET_TASKLOGS_LATEST = "SELECT " + TaskLogBoMapper.COL_ID
+            + " FROM {0} ORDER BY " + TaskLogBoMapper.COL_ID + " DESC";
 
     /**
      * {@inheritDoc}
@@ -128,8 +164,12 @@ public class JdbcTaskLogDao extends BaseJdbcDao implements ITaskLogDao {
         try {
             final String SQL = MessageFormat.format(SQL_CREATE_TASKLOG, calcTableName(taskLog));
             int numRows = execute(SQL, VALUES);
+            if (numRows > 0) {
+                execute(SQL_CREATE_TASKLOG_LATEST, new Object[] { taskLog.getId() });
+            }
             taskLog.setTimestampCreate(TIMESTAMP);
             invalidate(taskLog, true);
+            removeFromCache(cacheName, cacheKeyLatestLogs());
             return numRows > 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -145,7 +185,11 @@ public class JdbcTaskLogDao extends BaseJdbcDao implements ITaskLogDao {
         try {
             final String SQL = MessageFormat.format(SQL_DELETE_TASKLOG, calcTableName(taskLog));
             int numRows = execute(SQL, VALUES);
+            if (numRows > 0) {
+                execute(SQL_DELETE_TASKLOG_LATEST, VALUES);
+            }
             invalidate(taskLog, false);
+            removeFromCache(cacheName, cacheKeyLatestLogs());
             return numRows > 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -190,6 +234,53 @@ public class JdbcTaskLogDao extends BaseJdbcDao implements ITaskLogDao {
             }
         }
         return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public String[] getLatestTaskLogIds() {
+        final String cacheKey = cacheKeyLatestLogs();
+        List<String> result = getFromCache(cacheName, cacheKey, List.class);
+        if (result == null) {
+            try {
+                result = new ArrayList<>();
+                List<Map<String, Object>> dbRows = executeSelect(SQL_GET_TASKLOGS_LATEST,
+                        ArrayUtils.EMPTY_OBJECT_ARRAY);
+                for (Map<String, Object> dbRow : dbRows) {
+                    String id = DPathUtils.getValue(dbRow, TaskLogBoMapper.COL_ID, String.class);
+                    if (id != null) {
+                        result.add(id);
+                    }
+                    if (result.size() >= MAX_KEPT_LATEST_LOGS) {
+                        break;
+                    }
+                }
+                putToCache(cacheName, cacheKey, result);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return result.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void cleanupLatestTaskLogs() {
+        String[] latestTaskLogIds = getLatestTaskLogIds();
+        String latestId = latestTaskLogIds.length > 0
+                ? latestTaskLogIds[latestTaskLogIds.length - 1] : null;
+        if (latestId != null) {
+            try {
+                execute(SQL_CLEANUP_TASKLOG_LATEST, new Object[] { latestId });
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 }

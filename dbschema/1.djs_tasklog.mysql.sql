@@ -22,3 +22,10 @@ CREATE TABLE djs_tasklog_base (
         INDEX (timestamp_finish),
     duration_finish         INT
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+-- table to store latest task logs
+DROP TABLE IF EXISTS djs_tasklog_latest;
+CREATE TABLE djs_tasklog_latest (
+    task_id                 VARCHAR(32),
+    PRIMARY KEY (task_id)
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;

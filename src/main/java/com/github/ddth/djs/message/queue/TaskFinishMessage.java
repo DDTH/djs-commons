@@ -23,7 +23,7 @@ public class TaskFinishMessage extends BaseJobMessage {
     private static final long serialVersionUID = 1L;
 
     public final long finishTimestamp = System.currentTimeMillis();
-    public final long status;
+    public final int status;
     public final String message, error;
     public final byte[] output;
 
