@@ -2,6 +2,7 @@ package com.github.ddth.djs.api;
 
 import com.github.ddth.djs.message.queue.TaskFinishMessage;
 import com.github.ddth.djs.message.queue.TaskFireoffMessage;
+import com.github.ddth.djs.message.queue.TaskPickupMessage;
 
 /**
  * APIs to interact with DJS nodes.
@@ -32,10 +33,10 @@ public interface IDjsApi {
      * Notifies that job task has been picked up by a worker.
      * 
      * @param clientId
-     * @param taskFireoffMessage
+     * @param taskPickupMessage
      * @return
      */
-    public boolean notifyTaskPickup(String clientId, TaskFireoffMessage taskFireoffMessage);
+    public boolean notifyTaskPickup(String clientId, TaskPickupMessage taskPickupMessage);
 
     /**
      * Notifies that worker has finished a job task.
