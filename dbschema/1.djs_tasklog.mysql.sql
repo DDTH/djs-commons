@@ -7,7 +7,7 @@ CREATE TABLE djs_tasklog_base (
         PRIMARY KEY (task_id),
     job_id                  VARCHAR(32),
         INDEX (job_id),
-    task_status             INT                     NOT NULL DEFAULT (0),
+    task_status             INT                     NOT NULL DEFAULT 0,
     task_message            VARCHAR(255),
     task_error              TEXT,
     task_output             BLOB,
