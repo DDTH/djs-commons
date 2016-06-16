@@ -13,7 +13,7 @@
 
 	<groupId>com.github.ddth</groupId>
 	<artifactId>djs-commons</artifactId>
-	<version>0.1.3.12.2-SNAPSHOT</version>
+	<version>0.1.3.13-SNAPSHOT</version>
 	<name>djs-commons</name>
 	<description>Distributed Job Scheduler - Common Libraries</description>
 	<url>https://github.com/DDTH/djs-commons</url>

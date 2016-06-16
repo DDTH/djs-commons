@@ -1,7 +1,7 @@
 -- DJS - MySQL Schema
 
-DROP TABLE IF EXISTS djs_jobtemplate;
-CREATE TABLE djs_jobtemplate (
+DROP TABLE IF EXISTS djs_jobtpl;
+CREATE TABLE djs_jobtpl (
     tpl_id                          VARCHAR(32),
         PRIMARY KEY (tpl_id),
     tpl_desc                        VARCHAR(255),

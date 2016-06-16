@@ -165,10 +165,10 @@ public class TaskLogBo extends BaseBo {
     }
 
     public TaskLogBo setTimestampPickup(Date timestamp) {
-        if (timestamp == null) {
-            timestamp = new Date();
-        }
         setAttribute(ATTR_TIMESTAMP_PICKUP, timestamp);
+        if (timestamp == null) {
+            setAttribute(ATTR_DURATION_PICKUP, null);
+        }
         Date timestampCreate = getTimestampCreate();
         long duration = timestampCreate != null ? timestamp.getTime() - timestampCreate.getTime()
                 : 0;
@@ -188,7 +188,7 @@ public class TaskLogBo extends BaseBo {
     @JsonIgnore
     public int getDurationPickup() {
         Integer duration = getAttribute(ATTR_DURATION_PICKUP, Integer.class);
-        return duration != null ? duration.intValue() : 0;
+        return duration != null ? duration.intValue() : -1;
     }
 
     @JsonIgnore
@@ -197,10 +197,10 @@ public class TaskLogBo extends BaseBo {
     }
 
     public TaskLogBo setTimestampFinish(Date timestamp) {
-        if (timestamp == null) {
-            timestamp = new Date();
-        }
         setAttribute(ATTR_TIMESTAMP_FINISH, timestamp);
+        if (timestamp == null) {
+            setAttribute(ATTR_DURATION_FINISH, null);
+        }
         Date timestampPickup = getTimestampPickup();
         long duration = timestampPickup != null ? timestamp.getTime() - timestampPickup.getTime()
                 : 0;
@@ -211,7 +211,7 @@ public class TaskLogBo extends BaseBo {
     @JsonIgnore
     public int getDurationFinish() {
         Integer duration = getAttribute(ATTR_DURATION_FINISH, Integer.class);
-        return duration != null ? duration.intValue() : 0;
+        return duration != null ? duration.intValue() : -1;
     }
 
 }
