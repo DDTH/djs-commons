@@ -168,11 +168,12 @@ public class TaskLogBo extends BaseBo {
         setAttribute(ATTR_TIMESTAMP_PICKUP, timestamp);
         if (timestamp == null) {
             setAttribute(ATTR_DURATION_PICKUP, null);
+        } else {
+            Date timestampCreate = getTimestampCreate();
+            long duration = timestampCreate != null
+                    ? timestamp.getTime() - timestampCreate.getTime() : 0;
+            setAttribute(ATTR_DURATION_PICKUP, duration);
         }
-        Date timestampCreate = getTimestampCreate();
-        long duration = timestampCreate != null ? timestamp.getTime() - timestampCreate.getTime()
-                : 0;
-        setAttribute(ATTR_DURATION_PICKUP, duration);
         return this;
     }
 
@@ -200,11 +201,12 @@ public class TaskLogBo extends BaseBo {
         setAttribute(ATTR_TIMESTAMP_FINISH, timestamp);
         if (timestamp == null) {
             setAttribute(ATTR_DURATION_FINISH, null);
+        } else {
+            Date timestampPickup = getTimestampPickup();
+            long duration = timestampPickup != null
+                    ? timestamp.getTime() - timestampPickup.getTime() : 0;
+            setAttribute(ATTR_DURATION_FINISH, duration);
         }
-        Date timestampPickup = getTimestampPickup();
-        long duration = timestampPickup != null ? timestamp.getTime() - timestampPickup.getTime()
-                : 0;
-        setAttribute(ATTR_DURATION_FINISH, duration);
         return this;
     }
 
